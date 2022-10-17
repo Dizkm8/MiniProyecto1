@@ -3,10 +3,6 @@ import pandas as pd
 import openpyxl
 
 
-# to_excel() function working https://datatofish.com/export-dataframe-to-excel/
-# the rest of methods: https://aprendeconalf.es/docencia/python/manual/pandas/#eliminar-columnas-de-un-dataframe
-# insert Columns function https://www.geeksforgeeks.org/python-pandas-dataframe-insert/
-
 class CaseTwo:
     def __init__(self, data_frame):
         self.data_frame = data_frame
