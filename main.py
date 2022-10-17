@@ -1,6 +1,11 @@
 import pandas as pd
 from CaseTwo import CaseTwo
 
-data_frame = pd.read_csv('resources/airbnb.csv', sep=',')
-case_two = CaseTwo(data_frame)
 
+def extract():
+    return pd.read_csv('resources/airbnb.csv', sep=',')
+
+
+if __name__ == '__main__':
+    case_two = CaseTwo(extract())
+    case_two.transform()
