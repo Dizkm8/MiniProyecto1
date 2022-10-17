@@ -9,13 +9,23 @@ class CaseTwo:
         self.room_id_clara = 90387
 
     def transform(self):
-        self.data_frame = self.data_frame[(self.data_frame['room_id'] == self.room_id_roberto) |
-                                          (self.data_frame['room_id'] == self.room_id_clara)]
-        for i in ['host_id', 'room_type', 'neighborhood', 'accommodates', 'bedrooms', 'price']:
-            del self.data_frame[i]
-        self.data_frame.insert(0, 'Dueño', ['Clara', 'Roberto'], allow_duplicates=False)
-        self.data_frame = self.data_frame.rename(columns={'room_id': 'ID habitación', 'reviews': 'Cantidad reseñas',
-                                                          'overall_satisfaction': 'Puntuación (0 a 5)'})
+        roberto_clara_data_frame = self.data_frame[(self.data_frame['room_id'] == self.room_id_roberto) |
+                                                   (self.data_frame['room_id'] == self.room_id_clara)]
+        neighbors = roberto_clara_data_frame['neighborhood'].drop_duplicates().array
+        self.get_opinions_by_zone(neighbors)
+
+    def get_opinions_by_zone(self, neighbors):
+        airbnb_average_overall_satisfaction_by_zone = []
+        for neighbor in neighbors:
+            airbnb_average_overall_satisfaction_by_zone.append(
+                round(self.data_frame[self.data_frame['neighborhood'] == neighbor].iloc[:, 5].mean(skipna=True), 1))
+        self.data_frame.to_excel('Roberto.xlsx', sheet_name='Roberto', index=False, header=True)
+        serie = pd.Series
+        for neighbor in neighbors:
+            serie = pd.Series(data=airbnb_average_overall_satisfaction_by_zone[0],
+                              index=[('Promedio Zona: ' + neighbor)])
+        serie.to_excel('Roberto.xlsx', sheet_name='Roberto1', index=False, header=True)
 
     def load(self):
-        self.data_frame.to_excel('Roberto.xlsx', sheet_name='Roberto', index=False, header=True)
+        with pd.ExcelWriter('Roberto.xlsx', mode='a') as writer:
+            self.data_frame.to_excel(writer, sheet_name='Roberto', index=False, header=True)

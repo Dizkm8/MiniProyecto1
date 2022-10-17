@@ -1,3 +1,5 @@
+import email.errors
+
 import pandas as pd
 from CaseTwo import CaseTwo
 
@@ -5,7 +7,11 @@ global data_frame
 
 
 def extract():
-    return pd.read_csv('resources/airbnb.csv', sep=',')
+    try:
+        return pd.read_csv('resources/airbnb.csv', sep=',')
+    except IOError as e:
+        print(e)
+        return None
 
 
 def solve_case_two():
@@ -17,4 +23,5 @@ def solve_case_two():
 
 if __name__ == '__main__':
     data_frame = extract()
-    solve_case_two()
+    if data_frame is not None:
+        solve_case_two()
