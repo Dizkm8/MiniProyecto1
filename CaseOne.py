@@ -1,18 +1,21 @@
 import pandas as pd
-import numpy as np
+import openpyxl
 
-data_frame = pd.read_csv('resources/airbnb.csv')
 
-# Solo departamentos con habitaciones separadas.
-apartment = data_frame[data_frame['room_type'] == "Entire home/apt"]
+class CaseOne:
+    def __init__(self, data_frame):
+        self.data_frame = data_frame
 
-# Solo críticas mayores a 10.
-critics = apartment[apartment['reviews'] > 10]
+    def filter(self):
+        # Solo críticas mayores a 10.
+        critics = self.data_frame[self.data_frame['reviews'] > 10]
+        # Calificación mayor a cuatro estrellas.
+        four_stars = critics[critics['overall_satisfaction'] >= 4]
+        # Solo 2 habitaciones.
+        final_table = four_stars[four_stars['bedrooms'] == 2]
+        return final_table
 
-# Calificación mayor a cuatro estrellas.
-four_stars = critics[critics['overall_satisfaction'] >= 4]
-
-# Solo 2 habitaciones.
-two_bedrooms = four_stars[four_stars['bedrooms'] == 2]
-
-print(two_bedrooms)
+    def order(self):
+        sorted_table = self.filter().sort_values(['overall_satisfaction', 'reviews'], ascending=False)
+        new_table = sorted_table.reset_index(level=None, drop=True)
+        new_table.to_excel('Resultado.xlsx', sheet_name='Resultado', index=True, header=True)
