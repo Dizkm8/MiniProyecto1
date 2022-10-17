@@ -26,3 +26,4 @@ def solve_case_three():
 if __name__ == '__main__':
     data_frame = extract()
     solve_case_two()
+    solve_case_three()
