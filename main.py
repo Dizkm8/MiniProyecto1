@@ -18,8 +18,10 @@ def solve_case_two():
 
 def solve_case_three():
     case_three = CaseThree(data_frame)
-    case_three.transform()
-    case_three.load()
+    case_three.filter(20, "Shared room")
+    case_three.sort(['overall_satisfaction', 'reviews'])
+    case_three.first_selected_rows(10)
+    case_three.write_excel('Diana.xlsx', 'Diana')
     print("Caso 3 realizado con éxito, información desplegada en Diana.xlsx")
 
 
