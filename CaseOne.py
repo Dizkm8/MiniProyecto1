@@ -19,7 +19,10 @@ class CaseOne:
         four_stars = critics[critics['overall_satisfaction'] >= 4]
 
         # Only 2 rooms.
-        final_table = four_stars[four_stars['bedrooms'] == 2]
+        only_two_rooms = four_stars[four_stars['bedrooms'] == 2]
+
+        # More than 4 people.
+        final_table = only_two_rooms[only_two_rooms['accommodates'] >= 4]
 
         return final_table
 
