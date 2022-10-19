@@ -12,7 +12,7 @@ def extract():
 def solve_case_one():
     case_one = CaseOne(data_frame)
     case_one.order()
-    print("Caso 1 realizado con éxito, información desplegada en Resultado.xlsx")
+    print("Caso 1 realizado con éxito, información desplegada en Results.xlsx")
 
 
 def solve_case_two():
