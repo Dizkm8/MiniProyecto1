@@ -4,48 +4,76 @@ import openpyxl
 
 class CaseTwo:
     def __init__(self, data_frame):
-        self.data_frame = None
+        """
+        Constructor of the CaseTwo class.
+        :param data_frame: Dataframe with initial data to analize.
+        """
+        self.data_dict = dict()
         self.initial_data = data_frame
-        self.room_id_roberto = 97503
         self.room_id_clara = 90387
+        self.room_id_roberto = 97503
 
     def transform(self):
+        """
+        Trasnform initial data to Dataframe with only Roberto and Clara Dataframe rows
+        :return: None
+        """
+        roberto_and_clara_data_frame = self.initial_data[(self.initial_data['room_id'] == self.room_id_roberto) |
+                                                         (self.initial_data['room_id'] == self.room_id_clara)]
+        roberto_and_clara_data_frame = roberto_and_clara_data_frame.set_index("room_id").reset_index(
+            level=None, drop=True)
+        self.transform_for_zone(roberto_and_clara_data_frame)
+        self.get_opinions_by_price()
+
+    def transform_for_zone(self, roberto_and_clara_data_frame):
+        """
+        Transforms Roberto and Clara dataframe to get information by airbnb zone
+        :param roberto_and_clara_data_frame: Roberto and Clara only Dataframe
+        :return: None
+        """
         neighbors = []
-        names = []
-        roberto_data_frame = self.initial_data[(self.initial_data['room_id'] == self.room_id_roberto)]
-        clara_data_frame = self.initial_data[(self.initial_data['room_id'] == self.room_id_clara)]
-        roberto_data_frame = roberto_data_frame.set_index("room_id")
-        clara_data_frame = clara_data_frame.set_index("room_id")
-        if roberto_data_frame.shape[0] > 0:
-            neighbors.append(roberto_data_frame.iloc[0, 2])
-            names.append('Roberto')
-        if clara_data_frame.shape[0] > 0:
-            neighbors.append(clara_data_frame.iloc[0, 2])
-            names.append('Clara')
+        for index in roberto_and_clara_data_frame.index:
+            neighbors.append(roberto_and_clara_data_frame['neighborhood'][index])
         if len(neighbors) == 2:
             if neighbors[0] == neighbors[1]:
-                self.get_opinions_by_zone([neighbors[0]], names)
+                self.get_opinions_by_zone([neighbors[0]], ['Roberto y Clara'])
                 return
-        self.get_opinions_by_zone(neighbors, names)
+            self.get_opinions_by_zone(neighbors, ['Clara', 'Roberto'])
+            return
 
     def get_opinions_by_zone(self, neighbors, names):
+        """
+        Gets the average opinions by Roberto and clara airbnb zone
+        :param neighbors: Neighbors of each airbnb
+        :param names: Name of owner of airbnb (Roberto or Clara)
+        :return: None
+        """
         airbnb_average_overall_satisfaction_by_zone = []
         for neighbor in neighbors:
             airbnb_average_overall_satisfaction_by_zone.append(
                 round(self.initial_data[self.initial_data['neighborhood'] == neighbor].iloc[:, 5].mean(skipna=True), 1))
-        self.initial_data.to_excel('Roberto.xlsx', sheet_name='Roberto', index=False, header=True)
-        # df = pd.DataFrame([['María', 18], ['Luis', 22], ['Carmen', 20]], columns=['Nombre', 'Edad'])
-        print(airbnb_average_overall_satisfaction_by_zone)
-        self.data_frame = pd.DataFrame(columns=['Dueño', 'Puntuación general airbnb de la zona'])
-        # for i in range(len(neighbors)):
-        # new_row = {'name': 'Geo', 'physics': 87, 'chemistry': 92, 'algebra': 97}
-        # append row to the dataframe
-        # df_marks = df_marks.append(new_row, ignore_index=True)
-        # new_row = {''}
-        """        for i in range(len(neighbors)):
-            serie = pd.Series(data=airbnb_average_overall_satisfaction_by_zone[i],
-                              index=[('Promedio Zona: ' + neighbors[i])])
-        serie.to_excel('Roberto.xlsx', sheet_name='Roberto1', index=False, header=True)"""
+        for i in range(len(names)):
+            self.data_dict['Puntuación promedio de la zona del airbnbn de ' + names[i]] \
+                = airbnb_average_overall_satisfaction_by_zone[i]
+
+    def get_opinions_by_price(self):
+        """
+        Gets the average price of all airbnb
+        :return: None
+        """
+        prices_sum = 0
+        rows_amount = 0
+        for index in self.initial_data.index:
+            price = self.initial_data['price'][index]
+            if price > 1000 and index < 2500:
+                price /= 30
+            rows_amount += 1
+            prices_sum += price
+        if rows_amount == 0:
+            return
+        self.data_dict['Promedio de todos los airbnb'] = round(prices_sum / rows_amount, 1)
+
+
 
     def load(self):
         """
