@@ -7,32 +7,58 @@ global data_frame
 
 
 def extract():
-    return pd.read_csv('resources/airbnb.csv', sep=',')
+    """
+    Reads the data file
+    :return: File procesed into DataFrame or None if the catch IOError
+    """
+    try:
+        return pd.read_csv('resources/airbnb.csv', sep=',')
+    except IOError as e:
+        print("Corrupted!", e)
+        return None
+
+
+def solve_cases():
+    """
+    Call all the cases solve methods
+    :return: None
+    """
+    solve_case_one()
+    solve_case_two()
+    solve_case_three()
 
 
 def solve_case_one():
+    """
+    Initialize and start case one to solver
+    :return: None
+    """
     case_one = CaseOne(data_frame)
-    case_one.order()
-    print("Caso 1 realizado con éxito, información desplegada en Results.xlsx")
+    case_one.start()
+    print("Case 1 completed successfully, result on Results.xlsx")
 
 
 def solve_case_two():
+    """
+    Initialize and start case two solver
+    :return: None
+    """
     case_two = CaseTwo(data_frame)
     case_two.start()
-    print("Caso 2 realizado con éxito, información desplegada en Roberto.xlsx")
+    print("Case 2 completed successfully, result on en Roberto.xlsx")
 
 
 def solve_case_three():
+    """
+    Initialize and start case three to solver
+    :return: None
+    """
     case_three = CaseThree(data_frame)
-    case_three.filter(20, "Shared room")
-    case_three.sort(['overall_satisfaction', 'reviews'])
-    case_three.first_selected_rows(10)
-    case_three.write_excel('Diana.xlsx', 'Diana')
-    print("Caso 3 realizado con éxito, información desplegada en Diana.xlsx")
+    case_three.start()
+    print("Case 3 completed successfully, result on Diana.xlsx")
 
 
 if __name__ == '__main__':
     data_frame = extract()
-    solve_case_one()
-    solve_case_two()
-    solve_case_three()
+    if data_frame is not None:
+        solve_cases()

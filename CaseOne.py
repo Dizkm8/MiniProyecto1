@@ -1,10 +1,21 @@
+import pandas as pd
+import openpyxl
+
+
 class CaseOne:
     def __init__(self, data_frame):
         """
-        Class CaseOne constructor.
+        Constructor of the CaseOne class.
         :param data_frame: Data from airbnb.csv.
         """
         self.data_frame = data_frame
+
+    def start(self):
+        """
+        Starts the process to solve case two
+        :return: None
+        """
+        self.order()
 
     def filter(self):
         """
