@@ -9,7 +9,7 @@ global data_frame
 def extract():
     """
     Reads the data file
-    :return: File procesed into DataFrame or None if the catch IOError
+    :return: File procesed into DataFrame or None if IOError is caught
     """
     try:
         return pd.read_csv('resources/airbnb.csv', sep=',')

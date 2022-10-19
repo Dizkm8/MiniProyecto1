@@ -20,7 +20,6 @@ class CaseTwo:
         """
         self.transform()
         self.load()
-        print(self.data_dict)
 
     def get_roberto_and_clara_information(self, roberto_and_clara_data_frame):
         for index in roberto_and_clara_data_frame.index:
@@ -44,7 +43,7 @@ class CaseTwo:
                                                          (self.initial_data['room_id'] == self.room_id_clara)]
         roberto_and_clara_data_frame = roberto_and_clara_data_frame.reset_index(level=None, drop=True)
         self.transform_for_zone(roberto_and_clara_data_frame)
-        self.get_roberto_clara_information(roberto_and_clara_data_frame)
+        self.get_roberto_and_clara_information(roberto_and_clara_data_frame)
 
     def transform_for_zone(self, roberto_and_clara_data_frame):
         """
