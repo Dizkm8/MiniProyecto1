@@ -18,8 +18,7 @@ def solve_case_one():
 
 def solve_case_two():
     case_two = CaseTwo(data_frame)
-    case_two.transform()
-    case_two.load()
+    case_two.start()
     print("Caso 2 realizado con éxito, información desplegada en Roberto.xlsx")
 
 
@@ -34,7 +33,6 @@ def solve_case_three():
 
 if __name__ == '__main__':
     data_frame = extract()
-
     solve_case_one()
     solve_case_two()
     solve_case_three()
