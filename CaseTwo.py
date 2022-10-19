@@ -5,8 +5,8 @@ import openpyxl
 class CaseTwo:
     def __init__(self, data_frame):
         """
-        Constructor of the CaseTwo class.
-        :param data_frame: Dataframe with initial data to analize.
+        Constructor of the CaseTwo class
+        :param data_frame: Dataframe with initial data to analyze.
         """
         self.data_dict = dict()
         self.initial_data = data_frame
@@ -15,7 +15,7 @@ class CaseTwo:
 
     def transform(self):
         """
-        Trasnform initial data to Dataframe with only Roberto and Clara Dataframe rows
+        Transform initial data to Dataframe with only Roberto and Clara Dataframe rows
         :return: None
         """
         roberto_and_clara_data_frame = self.initial_data[(self.initial_data['room_id'] == self.room_id_roberto) |
@@ -24,6 +24,7 @@ class CaseTwo:
             level=None, drop=True)
         self.transform_for_zone(roberto_and_clara_data_frame)
         self.get_opinions_by_price()
+        print(self.data_dict)
 
     def transform_for_zone(self, roberto_and_clara_data_frame):
         """
@@ -37,8 +38,10 @@ class CaseTwo:
         if len(neighbors) == 2:
             if neighbors[0] == neighbors[1]:
                 self.get_opinions_by_zone([neighbors[0]], ['Roberto y Clara'])
+                self.get_guests_amount_by_zone([neighbors[0]], ['Roberto y Clara'])
                 return
             self.get_opinions_by_zone(neighbors, ['Clara', 'Roberto'])
+            self.get_guests_amount_by_zone(neighbors, ['Clara', 'Roberto'])
             return
 
     def get_opinions_by_zone(self, neighbors, names):
@@ -53,7 +56,7 @@ class CaseTwo:
             airbnb_average_overall_satisfaction_by_zone.append(
                 round(self.initial_data[self.initial_data['neighborhood'] == neighbor].iloc[:, 5].mean(skipna=True), 1))
         for i in range(len(names)):
-            self.data_dict['Puntuación promedio de la zona del airbnbn de ' + names[i]] \
+            self.data_dict['Puntuación promedio de los airbnb de la zona de ' + names[i]] \
                 = airbnb_average_overall_satisfaction_by_zone[i]
 
     def get_opinions_by_price(self):
@@ -71,9 +74,16 @@ class CaseTwo:
             prices_sum += price
         if rows_amount == 0:
             return
-        self.data_dict['Promedio de todos los airbnb'] = round(prices_sum / rows_amount, 1)
+        self.data_dict['Promedio de precio todos los airbnb'] = round(prices_sum / rows_amount, 1)
 
-
+    def get_guests_amount_by_zone(self, neighbors, names):
+        airbnb_average_overall_satisfaction_by_zone = []
+        for neighbor in neighbors:
+            airbnb_average_overall_satisfaction_by_zone.append(
+                round(self.initial_data[self.initial_data['neighborhood'] == neighbor].iloc[:, 4].mean(skipna=True)))
+        for i in range(len(names)):
+            self.data_dict['Reseñas promedio de los airbnb de la zona de ' + names[i]] \
+                = airbnb_average_overall_satisfaction_by_zone[i]
 
     def load(self):
         """
